@@ -23,8 +23,27 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
+      - name: Remove legacy chromedriver from PATH
+        run: |
+          if [ -f /usr/bin/chromedriver ]; then
+            echo "Legacy chromedriver found at /usr/bin/chromedriver; removing to allow Selenium Manager to resolve the correct version"
+            sudo rm -f /usr/bin/chromedriver
+          fi
+          if command -v chromedriver >/dev/null 2>&1; then
+            echo "Unexpected chromedriver still present in PATH: $(command -v chromedriver)"
+            chromedriver --version || true
+          else
+            echo "No chromedriver found in PATH"
+          fi
+
       - name: Export Chrome path
         run: echo "CHROME_BIN=$(which chrome || which google-chrome || which chromium)" >> $GITHUB_ENV
+
+      - name: Show browser diagnostics
+        run: |
+          echo "CHROME_BIN=$CHROME_BIN"
+          "$CHROME_BIN" --version || true
+          java -version
 
       - name: Run API tests
         run: mvn -B -Papi test

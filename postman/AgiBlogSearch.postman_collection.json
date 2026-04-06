@@ -1,0 +1,45 @@
+{
+  "info": {
+    "name": "Agi Blog Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection de apoio para validar manualmente a busca de posts do Blog do Agi."
+  },
+  "item": [
+    {
+      "name": "Buscar posts com termo válido",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://blog.agibank.com.br/wp-json/wp/v2/posts?search=emprestimo&per_page=5&_fields=title,link,slug",
+          "protocol": "https",
+          "host": ["blog", "agibank", "com", "br"],
+          "path": ["wp-json", "wp", "v2", "posts"],
+          "query": [
+            {"key": "search", "value": "emprestimo"},
+            {"key": "per_page", "value": "5"},
+            {"key": "_fields", "value": "title,link,slug"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Buscar posts com termo inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://blog.agibank.com.br/wp-json/wp/v2/posts?search=termoinexistenteagixpto&per_page=5&_fields=title,link,slug",
+          "protocol": "https",
+          "host": ["blog", "agibank", "com", "br"],
+          "path": ["wp-json", "wp", "v2", "posts"],
+          "query": [
+            {"key": "search", "value": "termoinexistenteagixpto"},
+            {"key": "per_page", "value": "5"},
+            {"key": "_fields", "value": "title,link,slug"}
+          ]
+        }
+      }
+    }
+  ]
+}

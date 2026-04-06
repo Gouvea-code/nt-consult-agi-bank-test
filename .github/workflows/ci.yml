@@ -1,0 +1,46 @@
+name: agi-blog-qa-ci
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  qa-automation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Export Chrome path
+        run: echo "CHROME_BIN=$(which chrome || which google-chrome || which chromium)" >> $GITHUB_ENV
+
+      - name: Run API tests
+        run: mvn -B -Papi test
+
+      - name: Run Web tests
+        run: mvn -B -Pweb test -Dbrowser=chrome -Dheadless=true
+
+      - name: Run performance smoke
+        run: mvn -B -Pperformance test -Dperformance.measured.requests=6
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-artifacts
+          path: |
+            target/surefire-reports/
+            target/screenshots/
+            target/performance/

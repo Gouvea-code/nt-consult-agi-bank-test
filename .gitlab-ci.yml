@@ -1,0 +1,45 @@
+image: maven:3.9.9-eclipse-temurin-17
+
+stages:
+  - test
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  CHROME_BIN: "/usr/bin/chromium"
+
+cache:
+  paths:
+    - .m2/repository
+
+before_script:
+  - apt-get update
+  - apt-get install -y chromium
+
+api_tests:
+  stage: test
+  script:
+    - mvn -B -Papi test
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports/
+
+web_tests:
+  stage: test
+  script:
+    - mvn -B -Pweb test -Dbrowser=chrome -Dheadless=true
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports/
+      - target/screenshots/
+
+performance_smoke:
+  stage: test
+  script:
+    - mvn -B -Pperformance test -Dperformance.measured.requests=6
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports/
+      - target/performance/

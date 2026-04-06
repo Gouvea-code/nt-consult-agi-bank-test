@@ -1,7 +1,6 @@
 package br.com.agibank.qa.core;
 
 import br.com.agibank.qa.config.TestConfig;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.Locale;
 import org.openqa.selenium.Dimension;
@@ -47,7 +46,6 @@ public final class DriverFactory {
     }
 
     private static WebDriver createChromeDriver() {
-        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments(
                 "--window-size=1600,1000",
@@ -70,7 +68,6 @@ public final class DriverFactory {
     }
 
     private static WebDriver createEdgeDriver() {
-        WebDriverManager.edgedriver().setup();
         EdgeOptions options = new EdgeOptions();
         options.addArguments("--window-size=1600,1000", "--disable-notifications");
         if (TestConfig.headless()) {
